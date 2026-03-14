@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق الأدوار - النسخة المعتمدة</title>
+    <style>
+        body {
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+
+        .log-screen {
+            background: #111;
+            min-height: 600px; 
+            padding: 20px;
+            border-radius: 30px;
+            border: 1px solid #222;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around; /* توزيع المسافات بالتساوي بين الأسطر */
+            text-align: center;
+        }
+
+        /* تنسيقات الأسطر الستة مع مسافات أمان */
+        .line-1 { 
+            font-size: 45px; color: #000; font-weight: bold; 
+            background: #fff; display: inline-block; 
+            padding: 10px 35px; border-radius: 20px; 
+            margin: 10px auto; align-self: center;
+        }
+        
+        .line-2, .line-4 { 
+            font-size: 32px; color: #ff3b30; 
+            font-style: italic; font-weight: bold; 
+            margin: 20px 0; /* مسافة عمودية أكبر لمنع التداخل */
+        }
+
+        .line-3, .line-5 { 
+            font-size: 24px; color: #aaa; 
+            font-weight: bold; 
+            margin: 10px 0; 
+        }
+
+        .line-6 { 
+            font-size: 28px; color: #4cd964; 
+            font-weight: bold; 
+            margin-top: 25px; 
+        }
+
+        /* الأزرار العائمة */
+        .round-btn {
+            position: fixed;
+            bottom: 40px;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: none;
+            background-color: #fff;
+            color: #000;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+            z-index: 100;
+        }
+
+        #runBtn { right: 30px; }
+        #resetBtn { left: 30px; }
+        .play-icon { font-size: 50px; margin-left: 5px; } 
+        .reset-text { font-size: 30px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="displayArea" class="log-screen">
+            <p style="color: #555; font-size: 22px;">اضغط المثلث للبدء</p>
+        </div>
+    </div>
+
+    <button id="runBtn" class="round-btn"><span class="play-icon">▶</span></button>
+    <button id="resetBtn" class="round-btn"><span class="reset-text">Re</span></button>
+
+    <script>
+        const display = document.getElementById('displayArea');
+        const runBtn = document.getElementById('runBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        function printLine(text, type) {
+            const p = document.createElement('p');
+            p.innerText = text;
+            p.className = 'line-' + type;
+            display.appendChild(p);
+        }
+
+        runBtn.onclick = function() {
+            display.innerHTML = ""; 
+
+            // 1. منطق الأدوار: البداية عشوائية بين 5 و 12
+            let savedTurns = localStorage.getItem('myTurns');
+            if (savedTurns === null) {
+                // Math.random() * 8 تعطي من 0 لـ 7 .. + 5 تعطي من 5 لـ 12
+                savedTurns = Math.floor(Math.random() * 8) + 5; 
+            } else {
+                savedTurns = parseInt(savedTurns) - 1;
+            }
+
+            if (savedTurns < 0) {
+                printLine("FINISH", 1);
+                localStorage.removeItem('myTurns');
+                return;
+            }
+            localStorage.setItem('myTurns', savedTurns);
+
+            // سطر 1: التورنز
+            printLine(savedTurns + " turns", 1);
+
+            // سطر 2: الحركة الأولى
+            let n1 = Math.floor(Math.random() * 5);
+            let moves = ["as & co sl & pl", "Ba sl", "Ti sl & pl", "2Ni ste pu", "lo Ni pu cl"];
+            printLine(moves[n1], 2);
+
+            // سطر 3: صعوبة
+            let n4 = Math.floor(Math.random() * 10);
+            printLine(n4 <= 2 ? "easy" : n4 <= 6 ? "medium" : "hard", 3);
+
+            // سطر 4: حركة ثانية مختلفة
+            let n2 = Math.floor(Math.random() * 5);
+            while (n2 == n1) { n2 = Math.floor(Math.random() * 5); }
+            printLine(moves[n2], 4);
+
+            // سطر 5: صعوبة + تايمز
+            let n5 = Math.floor(Math.random() * 10);
+            let d2 = n5 <= 2 ? "easy" : n5 <= 6 ? "medium" : "hard";
+            let t = (Math.floor(Math.random() * 10) + 2) + " times";
+            printLine(d2 + " / " + t, 5);
+
+            // سطر 6: الوضع الأخير
+            let n7 = Math.floor(Math.random() * 10);
+            printLine(n7 <= 2 ? "CO2m" : n7 <= 6 ? "Ju" : "BDSBa", 6);
+        };
+
+        resetBtn.onclick = function() {
+            localStorage.removeItem('myTurns');
+            display.innerHTML = '<p style="color:#fff; font-size: 24px;">RESET DONE</p>';
+        };
+    </script>
+</body>
+</html>
