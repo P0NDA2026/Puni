@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق الأدوار - النسخة المعتمدة</title>
+    <title>Puni</title>
     <style>
         body {
             background-color: #000;
@@ -18,54 +18,52 @@
 
         .container {
             width: 95%;
-            max-width: 500px;
-            margin-top: 20px;
+            max-width: 400px;
+            margin-top: 10px;
         }
 
         .log-screen {
-            background: #111;
-            min-height: 600px; 
-            padding: 20px;
-            border-radius: 30px;
-            border: 1px solid #222;
+            background: #000;
+            height: 80vh; 
+            padding: 10px;
             display: flex;
             flex-direction: column;
-            justify-content: space-around; /* توزيع المسافات بالتساوي بين الأسطر */
+            justify-content: center;
             text-align: center;
         }
 
-        /* تنسيقات الأسطر الستة مع مسافات أمان */
+        /* تنسيقات الأسطر بدون مسافات زي ما علمت في الصورة */
         .line-1 { 
             font-size: 45px; color: #000; font-weight: bold; 
             background: #fff; display: inline-block; 
-            padding: 10px 35px; border-radius: 20px; 
-            margin: 10px auto; align-self: center;
+            padding: 10px 30px; border-radius: 20px; 
+            margin: 0 auto 20px auto; 
         }
         
         .line-2, .line-4 { 
             font-size: 32px; color: #ff3b30; 
             font-style: italic; font-weight: bold; 
-            margin: 20px 0; /* مسافة عمودية أكبر لمنع التداخل */
+            margin: 5px 0;
         }
 
-        .line-3, .line-5 { 
-            font-size: 24px; color: #aaa; 
+        .line-3, .line-5, .line-times { 
+            font-size: 24px; color: #999; 
             font-weight: bold; 
-            margin: 10px 0; 
+            margin: 2px 0; 
         }
 
         .line-6 { 
             font-size: 28px; color: #4cd964; 
             font-weight: bold; 
-            margin-top: 25px; 
+            margin-top: 15px; 
         }
 
-        /* الأزرار العائمة */
+        /* الأزرار البيضاء بالأيقونات السوداء في الزوايا */
         .round-btn {
             position: fixed;
-            bottom: 40px;
-            width: 90px;
-            height: 90px;
+            bottom: 30px;
+            width: 85px;
+            height: 85px;
             border-radius: 50%;
             border: none;
             background-color: #fff;
@@ -74,12 +72,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.1);
             z-index: 100;
         }
 
-        #runBtn { right: 30px; }
-        #resetBtn { left: 30px; }
+        #runBtn { right: 25px; }
+        #resetBtn { left: 25px; }
         .play-icon { font-size: 50px; margin-left: 5px; } 
         .reset-text { font-size: 30px; font-weight: bold; }
     </style>
@@ -88,7 +86,7 @@
 
     <div class="container">
         <div id="displayArea" class="log-screen">
-            <p style="color: #555; font-size: 22px;">اضغط المثلث للبدء</p>
+            <p style="color: #444;">Puni جاهز</p>
         </div>
     </div>
 
@@ -100,63 +98,65 @@
         const runBtn = document.getElementById('runBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        function printLine(text, type) {
+        function printLine(text, className) {
             const p = document.createElement('p');
             p.innerText = text;
-            p.className = 'line-' + type;
+            p.className = className;
             display.appendChild(p);
         }
 
         runBtn.onclick = function() {
             display.innerHTML = ""; 
 
-            // 1. منطق الأدوار: البداية عشوائية بين 5 و 12
             let savedTurns = localStorage.getItem('myTurns');
             if (savedTurns === null) {
-                // Math.random() * 8 تعطي من 0 لـ 7 .. + 5 تعطي من 5 لـ 12
+                // عدد الأدوار من 5 لـ 12
                 savedTurns = Math.floor(Math.random() * 8) + 5; 
             } else {
                 savedTurns = parseInt(savedTurns) - 1;
             }
 
             if (savedTurns < 0) {
-                printLine("FINISH", 1);
+                printLine("FINISH", "line-1");
                 localStorage.removeItem('myTurns');
                 return;
             }
             localStorage.setItem('myTurns', savedTurns);
 
-            // سطر 1: التورنز
-            printLine(savedTurns + " turns", 1);
+            const moves = ["as & co sl & pl", "Ba sl", "Ti sl & pl", "2Ni ste pu", "lo Ni pu cl"];
 
-            // سطر 2: الحركة الأولى
+            // 1. التورنز
+            printLine(savedTurns + " turns", "line-1");
+
+            // 2. حركة 1
             let n1 = Math.floor(Math.random() * 5);
-            let moves = ["as & co sl & pl", "Ba sl", "Ti sl & pl", "2Ni ste pu", "lo Ni pu cl"];
-            printLine(moves[n1], 2);
+            printLine(moves[n1], "line-2");
 
-            // سطر 3: صعوبة
+            // 3. صعوبة 1
             let n4 = Math.floor(Math.random() * 10);
-            printLine(n4 <= 2 ? "easy" : n4 <= 6 ? "medium" : "hard", 3);
+            printLine(n4 <= 2 ? "easy" : n4 <= 6 ? "medium" : "hard", "line-3");
 
-            // سطر 4: حركة ثانية مختلفة
+            // 4. حركة 2
             let n2 = Math.floor(Math.random() * 5);
             while (n2 == n1) { n2 = Math.floor(Math.random() * 5); }
-            printLine(moves[n2], 4);
+            printLine(moves[n2], "line-4");
 
-            // سطر 5: صعوبة + تايمز
+            // 5. صعوبة 2 (منفصلة)
             let n5 = Math.floor(Math.random() * 10);
-            let d2 = n5 <= 2 ? "easy" : n5 <= 6 ? "medium" : "hard";
-            let t = (Math.floor(Math.random() * 10) + 2) + " times";
-            printLine(d2 + " / " + t, 5);
+            printLine(n5 <= 2 ? "easy" : n5 <= 6 ? "medium" : "hard", "line-5");
 
-            // سطر 6: الوضع الأخير
+            // 6. التايمز (منفصلة تماماً)
+            let t = (Math.floor(Math.random() * 10) + 2) + " times";
+            printLine(t, "line-times");
+
+            // 7. الوضع الأخير
             let n7 = Math.floor(Math.random() * 10);
-            printLine(n7 <= 2 ? "CO2m" : n7 <= 6 ? "Ju" : "BDSBa", 6);
+            printLine(n7 <= 2 ? "CO2m" : n7 <= 6 ? "Ju" : "BDSBa", "line-6");
         };
 
         resetBtn.onclick = function() {
             localStorage.removeItem('myTurns');
-            display.innerHTML = '<p style="color:#fff; font-size: 24px;">RESET DONE</p>';
+            display.innerHTML = '<p style="color:#fff;">RESET DONE</p>';
         };
     </script>
 </body>
