@@ -11,33 +11,38 @@
             padding: 0;
             font-family: Arial, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column; /* ترتيب العناصر عمودياً */
+            align-items: center;
             height: 100vh;
             overflow: hidden;
-            position: relative; /* عشان العنوان يثبت فوق */
         }
 
-        /* تنسيق كلمة Puni كعنوان ثابت فوق */
+        /* تنسيق كلمة Puni */
+        .site-header {
+            width: 100%;
+            padding: 20px 0 0 25px; /* مسافة من فوق ومن الشمال */
+            text-align: left; /* الكلمة تروح شمال */
+        }
+
         .site-title {
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            color: #fff; /* لون أبيض منور */
+            color: #fff; /* أبيض صريح */
             font-size: 32px;
             font-weight: bold;
             margin: 0;
-            z-index: 200; /* عشان يفضل فوق كل حاجة */
+            letter-spacing: 1px;
         }
 
         .container {
             width: 95%;
             max-width: 400px;
-            margin-top: 50px; /* سيب مسافة للعنوان */
+            flex-grow: 1; /* تخلي الحاوية تاخد باقي المساحة */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .log-screen {
             background: #000;
-            height: 80vh; 
             padding: 10px;
             display: flex;
             flex-direction: column;
@@ -45,7 +50,7 @@
             text-align: center;
         }
 
-        /* تنسيقات الأسطر السبعة المفرودة */
+        /* تنسيقات الأسطر */
         .line-1 { 
             font-size: 45px; color: #000; font-weight: bold; 
             background: #fff; display: inline-block; 
@@ -97,11 +102,13 @@
 </head>
 <body>
 
-    <h1 class="site-title">Puni</h1>
+    <div class="site-header">
+        <h1 class="site-title">Puni</h1>
+    </div>
 
     <div class="container">
         <div id="displayArea" class="log-screen">
-            <p style="color: #444;">Puni جاهز</p>
+            <p style="color: #444; font-size: 20px;">جاهز...</p>
         </div>
     </div>
 
@@ -122,55 +129,38 @@
 
         runBtn.onclick = function() {
             display.innerHTML = ""; 
-
             let savedTurns = localStorage.getItem('myTurns');
             if (savedTurns === null) {
                 savedTurns = Math.floor(Math.random() * 8) + 5; 
             } else {
                 savedTurns = parseInt(savedTurns) - 1;
             }
-
             if (savedTurns < 0) {
                 printLine("FINISH", "line-1");
                 localStorage.removeItem('myTurns');
                 return;
             }
             localStorage.setItem('myTurns', savedTurns);
-
             const moves = ["as & co sl & pl", "Ba sl", "Ti sl & pl", "2Ni ste pu", "lo Ni pu cl"];
-
-            // 1.turns
             printLine(savedTurns + " turns", "line-1");
-
-            // 2. حركة 1
             let n1 = Math.floor(Math.random() * 5);
             printLine(moves[n1], "line-2");
-
-            // 3. صعوبة 1
             let n4 = Math.floor(Math.random() * 10);
             printLine(n4 <= 2 ? "easy" : n4 <= 6 ? "medium" : "hard", "line-3");
-
-            // 4. حركة 2
             let n2 = Math.floor(Math.random() * 5);
             while (n2 == n1) { n2 = Math.floor(Math.random() * 5); }
             printLine(moves[n2], "line-4");
-
-            // 5. صعوبة 2 (منفصلة)
             let n5 = Math.floor(Math.random() * 10);
             printLine(n5 <= 2 ? "easy" : n5 <= 6 ? "medium" : "hard", "line-5");
-
-            // 6. التايمز (منفصلة تماماً)
             let t = (Math.floor(Math.random() * 10) + 2) + " times";
             printLine(t, "line-times");
-
-            // 7. الوضع الأخير
             let n7 = Math.floor(Math.random() * 10);
             printLine(n7 <= 2 ? "CO2m" : n7 <= 6 ? "Ju" : "BDSBa", "line-6");
         };
 
         resetBtn.onclick = function() {
             localStorage.removeItem('myTurns');
-            display.innerHTML = '<p style="color:#fff;">RESET DONE</p>';
+            display.innerHTML = '<p style="color:#fff;">تم التصفير</p>';
         };
     </script>
 </body>
