@@ -14,12 +14,25 @@
             justify-content: center;
             height: 100vh;
             overflow: hidden;
+            position: relative; /* عشان العنوان يثبت فوق */
+        }
+
+        /* تنسيق كلمة Puni كعنوان ثابت فوق */
+        .site-title {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            color: #fff; /* لون أبيض منور */
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0;
+            z-index: 200; /* عشان يفضل فوق كل حاجة */
         }
 
         .container {
             width: 95%;
             max-width: 400px;
-            margin-top: 10px;
+            margin-top: 50px; /* سيب مسافة للعنوان */
         }
 
         .log-screen {
@@ -32,7 +45,7 @@
             text-align: center;
         }
 
-        /* تنسيقات الأسطر بدون مسافات زي ما علمت في الصورة */
+        /* تنسيقات الأسطر السبعة المفرودة */
         .line-1 { 
             font-size: 45px; color: #000; font-weight: bold; 
             background: #fff; display: inline-block; 
@@ -58,7 +71,7 @@
             margin-top: 15px; 
         }
 
-        /* الأزرار البيضاء بالأيقونات السوداء في الزوايا */
+        /* الأزرار العائمة */
         .round-btn {
             position: fixed;
             bottom: 30px;
@@ -83,6 +96,8 @@
     </style>
 </head>
 <body>
+
+    <h1 class="site-title">Puni</h1>
 
     <div class="container">
         <div id="displayArea" class="log-screen">
@@ -110,7 +125,6 @@
 
             let savedTurns = localStorage.getItem('myTurns');
             if (savedTurns === null) {
-                // عدد الأدوار من 5 لـ 12
                 savedTurns = Math.floor(Math.random() * 8) + 5; 
             } else {
                 savedTurns = parseInt(savedTurns) - 1;
@@ -125,7 +139,7 @@
 
             const moves = ["as & co sl & pl", "Ba sl", "Ti sl & pl", "2Ni ste pu", "lo Ni pu cl"];
 
-            // 1. التورنز
+            // 1.turns
             printLine(savedTurns + " turns", "line-1");
 
             // 2. حركة 1
